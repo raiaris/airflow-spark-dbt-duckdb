@@ -1,0 +1,27 @@
+# Airflow runtime
+airflow/logs/
+airflow/airflow.db
+airflow/airflow.cfg
+
+# dbt build artifacts e runtime
+dbt/target/
+dbt/logs/
+dbt/dbt_packages/
+dbt/*.duckdb
+dbt/.user.yml
+
+# DuckDB output do pipeline
+dbt_db/
+*.duckdb
+
+# Warehouse Iceberg (dados gerados pelo Spark)
+warehouse/
+
+# Python local
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE / ferramentas locais
+.claude/
