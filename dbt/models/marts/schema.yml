@@ -7,11 +7,13 @@ models:
       Útil para identificar regiões com maior concentração de risco sistêmico.
     columns:
       - name: location_region
+        data_type: varchar
         description: "Região geográfica das transações."
         tests:
           - not_null
           - unique
       - name: avg_risk_score
+        data_type: double
         description: "Média do risk score de todas as transações da região, arredondada em 4 casas decimais."
         tests:
           - not_null
@@ -22,15 +24,18 @@ models:
       mais recente (por timestamp) com transaction_type igual a 'sale' de cada endereço.
     columns:
       - name: receiving_address
+        data_type: varchar
         description: "Endereço de destino da transação mais recente do tipo sale."
         tests:
           - not_null
           - unique
       - name: amount
+        data_type: double
         description: "Valor da transação mais recente do tipo sale para o endereço."
         tests:
           - not_null
       - name: timestamp
+        data_type: bigint
         description: "Unix timestamp da transação mais recente do tipo sale para o endereço."
         tests:
           - not_null
