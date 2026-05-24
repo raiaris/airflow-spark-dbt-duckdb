@@ -37,3 +37,7 @@ RUN python /tmp/make_spark_conf.py
 # Garante que o diretório do DuckDB existe com ownership do airflow.
 # Sem isso, o Docker inicializa o named volume como root e bloqueia escrita.
 RUN mkdir -p /opt/airflow/dbt_db && mkdir -p /opt/airflow/airflow_db
+
+# start.sh precisa rodar como root para corrigir permissoes em bind mounts
+# e depois faz exec su para o usuario airflow
+USER root

@@ -20,5 +20,5 @@ select
     cast(month as int) as month,
     cast(day as int) as day,
     cast(dagrun_id as varchar) as dagrun_id,
-    cast(execution_date as timestamp) as execution_date    
+    cast(current_timestamp as timestamp) as dbt_loaded_at
 from source_data
