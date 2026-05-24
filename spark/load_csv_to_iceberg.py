@@ -24,29 +24,11 @@ spark = (
 
 csv_path = "/data/df_fraud_credit.csv"
 
-# Ler CSV com schema inferido
 df = (
     spark.read
     .option("header", "true")
     .option("inferSchema", "true")
     .csv(csv_path)
-)
-
-# Função para converter 'none' em null em todas as colunas
-def convert_none_to_null(df):
-    for col_name in df.columns:
-        df = df.withColumn(
-            col_name,
-            F.when(F.col(col_name) == 'none', None).otherwise(F.col(col_name))
-        )
-    return df
-
-# Aplicar conversão de 'none' para null
-df = convert_none_to_null(df)
-
-# Adicionar colunas de partição
-df = (
-    df
     .withColumn("year",      F.lit(year))
     .withColumn("month",     F.lit(month))
     .withColumn("day",       F.lit(day))
@@ -57,7 +39,7 @@ spark.sql("CREATE DATABASE IF NOT EXISTS local_iceberg.default")
 
 (
     df.writeTo("local_iceberg.default.fraud_raw")
-    .partitionedBy("year", "month", "day", "dagrun_id")
+    .partitionedBy("year", "month", "day")
     .createOrReplace()
 )
 

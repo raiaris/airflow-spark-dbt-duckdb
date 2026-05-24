@@ -26,7 +26,7 @@ with DAG(
 
     dbt_deps = BashOperator(
         task_id="dbt_deps",
-        bash_command="cd /opt/airflow/dbt && /opt/dbt-venv/bin/dbt deps --profiles-dir /opt/airflow/dbt",
+        bash_command="cd /opt/airflow/dbt && /opt/dbt-venv/bin/dbt deps",
     )
 
     dbt_run = BashOperator(
@@ -39,25 +39,4 @@ with DAG(
         bash_command="cd /opt/airflow/dbt && /opt/dbt-venv/bin/dbt test --profiles-dir /opt/airflow/dbt",
     )
 
-    dbt_docs_generate = BashOperator(
-        task_id="dbt_docs_generate",
-        bash_command=(
-            "cd /opt/airflow/dbt && "
-            "/opt/dbt-venv/bin/dbt docs generate "
-            "--profiles-dir /opt/airflow/dbt"
-        ),
-    )
-
-    edr_report = BashOperator(
-        task_id="edr_report",
-        bash_command=(
-            "mkdir -p /data/edr_report && "
-            "cd /opt/airflow/dbt && "
-            "/opt/dbt-venv/bin/edr report "
-            "--profiles-dir /opt/airflow/dbt "
-            "--project-dir /opt/airflow/dbt "
-            "--file-path /data/edr_report/elementary_report.html"
-        ),
-    )
-
-    load_csv >> dbt_deps >> dbt_run >> dbt_test >> dbt_docs_generate >> edr_report
+    load_csv >> dbt_deps >> dbt_run >> dbt_test

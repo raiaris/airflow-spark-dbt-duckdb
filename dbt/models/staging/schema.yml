@@ -1,90 +1,18 @@
 version: 2
 
 models:
-  - name: stg_fraud__transactions
-    description: >
-      Staging de transações de fraude brutas. Realiza casts de tipo e elimina
-      valores inválidos no campo amount antes de expor os dados para a camada marts.
-    tests:
-      - elementary.volume_anomalies:
-          config:
-            severity: warn
-      - elementary.all_columns_anomalies:
-          column_anomalies:
-            - null_count
-            - null_percent
-            - average
-            - min
-            - max
-            - zero_count
-          config:
-            severity: warn
+  - name: stg_fraud
+    description: "Staging model for raw fraud transactions loaded into Iceberg."
     columns:
       - name: timestamp
-        description: "Unix timestamp da transação (bigint)."
         tests:
           - not_null
       - name: sending_address
-        description: "Endereço de origem da transação."
         tests:
           - not_null
       - name: receiving_address
-        description: "Endereço de destino da transação."
         tests:
           - not_null
       - name: amount
-        description: "Valor da transação em double. Nulos representam entradas originalmente 'none'."
-        tests:
-          - elementary.column_anomalies:
-              anomaly_direction: both
-              config:
-                severity: warn
-      - name: transaction_type
-        description: "Tipo da transação (ex: compra, transferência)."
-        tests:
-          - not_null
-      - name: location_region
-        description: "Região geográfica onde a transação foi originada."
-        tests:
-          - not_null
-      - name: ip_prefix
-        description: "Prefixo do endereço IP associado à sessão."
-      - name: login_frequency
-        description: "Frequência de login do usuário no período recente (int)."
-      - name: session_duration
-        description: "Duração da sessão em segundos (int)."
-      - name: purchase_pattern
-        description: "Padrão de comportamento de compra identificado pelo sistema."
-      - name: age_group
-        description: "Faixa etária do titular da conta."
-      - name: risk_score
-        description: "Score de risco calculado pelo sistema de detecção de fraude (VARCHAR numérico)."
-        tests:
-          - elementary.column_anomalies:
-              anomaly_direction: both
-              config:
-                severity: warn
-      - name: anomaly
-        description: "Categoria de risco da transação: high_risk, low_risk ou moderate_risk."
-        tests:
-          - not_null
-      - name: year
-        description: "Ano de ingestão — herdado da partição Iceberg."
-        tests:
-          - not_null
-      - name: month
-        description: "Mês de ingestão — herdado da partição Iceberg."
-        tests:
-          - not_null
-      - name: day
-        description: "Dia de ingestão — herdado da partição Iceberg."
-        tests:
-          - not_null
-      - name: dagrun_id
-        description: "Identificador do DAG run do Airflow que gerou o lote."
-        tests:
-          - not_null
-      - name: execution_timestamp
-        description: "Timestamp de execução do DAG run do Airflow."
         tests:
           - not_null

@@ -6,14 +6,12 @@ model-paths: ["models"]
 analysis-paths: []
 test-paths: []
 seed-paths: []
-macro-paths: ["macros"]
+macro-paths: []
 target-path: target
 clean-targets:
   - target
   - dbt_packages
 
 models:
-  elementary:
-    +schema: elementary
   local_data_pipeline:
     +materialized: table
