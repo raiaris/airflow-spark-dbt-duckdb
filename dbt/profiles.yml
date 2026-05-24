@@ -1,0 +1,9 @@
+duckdb_iceberg:
+  outputs:
+    dev:
+      type: duckdb
+      path: /opt/airflow/dbt_db/fraud_warehouse.duckdb
+      threads: 4
+      extensions:
+        - iceberg
+  target: dev

@@ -1,0 +1,17 @@
+name: local_data_pipeline
+version: '1.0'
+config-version: 2
+profile: duckdb_iceberg
+model-paths: ["models"]
+analysis-paths: []
+test-paths: []
+seed-paths: []
+macro-paths: []
+target-path: target
+clean-targets:
+  - target
+  - dbt_packages
+
+models:
+  local_data_pipeline:
+    +materialized: table
