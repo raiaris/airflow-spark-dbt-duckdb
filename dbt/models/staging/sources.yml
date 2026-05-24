@@ -1,0 +1,55 @@
+version: 2
+
+sources:
+  - name: iceberg_warehouse
+    description: >
+      Tabelas Iceberg armazenadas no warehouse local (/warehouse).
+      Dados ingeridos pelo job PySpark (load_csv_to_iceberg) e particionados por year/month/day.
+    tables:
+      - name: fraud_raw
+        description: >
+          Transações brutas de fraude gravadas pelo Spark a partir do CSV original.
+          Particionada por year, month e day conforme a data lógica do DAG run do Airflow.
+        meta:
+          external_location: "iceberg_scan('/warehouse/default/fraud_raw')"
+        columns:
+          - name: timestamp
+            description: "Unix timestamp da transação."
+            tests:
+              - not_null
+          - name: sending_address
+            description: "Endereço de origem da transação (carteira ou conta)."
+            tests:
+              - not_null
+          - name: receiving_address
+            description: "Endereço de destino da transação (carteira ou conta)."
+            tests:
+              - not_null
+          - name: amount
+            description: "Valor da transação. Pode chegar como string 'none' no dado bruto."
+          - name: transaction_type
+            description: "Tipo da transação (ex: compra, transferência)."
+          - name: location_region
+            description: "Região geográfica onde a transação foi originada."
+          - name: ip_prefix
+            description: "Prefixo do endereço IP associado à sessão da transação."
+          - name: login_frequency
+            description: "Frequência de login do usuário no período recente."
+          - name: session_duration
+            description: "Duração da sessão em segundos."
+          - name: purchase_pattern
+            description: "Padrão de comportamento de compra identificado pelo sistema."
+          - name: age_group
+            description: "Faixa etária do titular da conta."
+          - name: risk_score
+            description: "Score de risco calculado pelo sistema de detecção de fraude."
+          - name: anomaly
+            description: "Flag de anomalia: 0 = transação normal, 1 = anômala."
+          - name: year
+            description: "Ano de ingestão — coluna de partição Iceberg."
+          - name: month
+            description: "Mês de ingestão — coluna de partição Iceberg."
+          - name: day
+            description: "Dia de ingestão — coluna de partição Iceberg."
+          - name: dagrun_id
+            description: "Identificador do DAG run do Airflow que gerou o lote."

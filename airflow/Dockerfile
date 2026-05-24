@@ -13,7 +13,10 @@ RUN chmod +x /start.sh
 # dbt-duckdb em venv isolado — criado como root, executável pelo airflow
 # Separa completamente as dependencias do dbt das do Airflow/pyspark
 RUN python -m venv /opt/dbt-venv && \
-    PIP_USER=0 /opt/dbt-venv/bin/pip install --no-cache-dir dbt-duckdb==1.8.4
+    PIP_USER=0 /opt/dbt-venv/bin/pip install --no-cache-dir \
+        dbt-duckdb==1.8.4 \
+        "elementary-data==0.23.1" && \
+    chmod -R 777 /opt/dbt-venv/lib/python3.11/site-packages/elementary/monitor/dbt_project
 
 # A imagem do Airflow bloqueia pip como root — todos os pacotes do usuario
 # devem ser instalados como USER airflow
@@ -33,4 +36,4 @@ RUN python /tmp/make_spark_conf.py
 
 # Garante que o diretório do DuckDB existe com ownership do airflow.
 # Sem isso, o Docker inicializa o named volume como root e bloqueia escrita.
-RUN mkdir -p /opt/airflow/dbt_db
+RUN mkdir -p /opt/airflow/dbt_db && mkdir -p /opt/airflow/airflow_db

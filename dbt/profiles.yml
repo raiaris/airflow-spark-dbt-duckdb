@@ -7,3 +7,14 @@ duckdb_iceberg:
       extensions:
         - iceberg
   target: dev
+
+elementary:
+  outputs:
+    dev:
+      type: duckdb
+      path: /opt/airflow/dbt_db/fraud_warehouse.duckdb
+      threads: 4
+      schema: main_elementary
+      extensions:
+        - iceberg
+  target: dev

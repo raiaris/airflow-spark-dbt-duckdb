@@ -1,0 +1,36 @@
+version: 2
+
+models:
+  - name: amount
+    description: >
+      Ranking de regiões geográficas pela média de risk score das transações.
+      Útil para identificar regiões com maior concentração de risco sistêmico.
+    columns:
+      - name: location_region
+        description: "Região geográfica das transações."
+        tests:
+          - not_null
+          - unique
+      - name: avg_risk_score
+        description: "Média do risk score de todas as transações da região, arredondada em 4 casas decimais."
+        tests:
+          - not_null
+
+  - name: risk_score_average
+    description: >
+      Top 3 receiving_address com maior amount, considerando apenas a transação
+      mais recente (por timestamp) com transaction_type igual a 'sale' de cada endereço.
+    columns:
+      - name: receiving_address
+        description: "Endereço de destino da transação mais recente do tipo sale."
+        tests:
+          - not_null
+          - unique
+      - name: amount
+        description: "Valor da transação mais recente do tipo sale para o endereço."
+        tests:
+          - not_null
+      - name: timestamp
+        description: "Unix timestamp da transação mais recente do tipo sale para o endereço."
+        tests:
+          - not_null

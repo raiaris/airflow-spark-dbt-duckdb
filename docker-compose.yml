@@ -1,9 +1,12 @@
 services:
   init:
     image: busybox
-    command: sh -c "mkdir -p /dbt_db && chmod 777 /dbt_db"
+    command: sh -c "mkdir -p /dbt_db && chmod 777 /dbt_db && mkdir -p /warehouse && chmod 777 /warehouse && chmod 777 /dbt && mkdir -p /data/edr_report && chmod 777 /data/edr_report && mkdir -p /dbt/target && chmod 777 /dbt/target"
     volumes:
       - ./dbt_db:/dbt_db
+      - ./warehouse:/warehouse
+      - ./dbt:/dbt
+      - ./data:/data
     restart: "no"
 
   airflow:
@@ -15,12 +18,13 @@ services:
       AIRFLOW__CORE__LOAD_EXAMPLES: "False"
       AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "True"
       AIRFLOW__CORE__FERNET_KEY: "3AXuW2z8sfkvfOeixxG4JZ2tY5uxb62jTNvAItNljMQ="
-      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: sqlite:////opt/airflow/airflow.db
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: sqlite:////opt/airflow/airflow_db/airflow.db
       AIRFLOW__API__AUTH_BACKENDS: "airflow.api.auth.backend.basic_auth"
       DBT_PROFILES_DIR: /opt/airflow/dbt
       PATH: /home/airflow/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
       JAVA_TOOL_OPTIONS: "-XX:TieredStopAtLevel=1"
     volumes:
+      - airflow_db:/opt/airflow/airflow_db
       - ./airflow/dags:/opt/airflow/dags
       - airflow_logs:/opt/airflow/logs
       - ./airflow/plugins:/opt/airflow/plugins
@@ -59,5 +63,26 @@ services:
       - ./data:/data
       - ./warehouse:/warehouse
 
+  dbt-docs:
+    image: nginx:alpine
+    volumes:
+      - ./dbt/target:/usr/share/nginx/html:ro
+    ports:
+      - "8082:80"
+    depends_on:
+      init:
+        condition: service_completed_successfully
+
+  elementary-report:
+    image: nginx:alpine
+    volumes:
+      - ./data/edr_report:/usr/share/nginx/html:ro
+    ports:
+      - "8083:80"
+    depends_on:
+      init:
+        condition: service_completed_successfully
+
 volumes:
   airflow_logs:
+  airflow_db:
