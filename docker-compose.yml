@@ -1,7 +1,7 @@
 services:
   init:
     image: busybox
-    command: sh -c "mkdir -p /dbt_db && chmod 777 /dbt_db && mkdir -p /warehouse && chmod 777 /warehouse && chmod 777 /dbt && mkdir -p /data/edr_report && chmod 777 /data/edr_report && mkdir -p /dbt/target && chmod 777 /dbt/target"
+    command: sh -c "mkdir -p /dbt_db && chmod -R 777 /dbt_db && mkdir -p /warehouse && chmod 777 /warehouse && chmod 777 /dbt && mkdir -p /data/edr_report && chmod -R 777 /data/edr_report && mkdir -p /dbt/target && chmod 777 /dbt/target && mkdir -p /dbt/edr_target && chmod -R 777 /dbt/edr_target"
     volumes:
       - ./dbt_db:/dbt_db
       - ./warehouse:/warehouse

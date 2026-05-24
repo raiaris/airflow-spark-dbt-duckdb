@@ -6,6 +6,7 @@ airflow/airflow.cfg
 # dbt build artifacts e runtime
 dbt/target/
 dbt/logs/
+dbt/edr_target/
 dbt/dbt_packages/
 dbt/*.duckdb
 dbt/.user.yml
@@ -25,3 +26,4 @@ __pycache__/
 
 # IDE / ferramentas locais
 .claude/
+CLAUDE.md
