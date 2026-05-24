@@ -60,4 +60,5 @@ with DAG(
         ),
     )
 
+
     load_csv >> dbt_deps >> dbt_run >> dbt_test >> dbt_docs_generate >> edr_report
