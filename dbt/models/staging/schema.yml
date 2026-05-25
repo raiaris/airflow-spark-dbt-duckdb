@@ -62,7 +62,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: [ 'North America','South America','Asia','Africa','Europe']
+              values: ['North America','South America','Asia','Africa','Europe']
               config:
                 severity: warn
       - name: ip_prefix
